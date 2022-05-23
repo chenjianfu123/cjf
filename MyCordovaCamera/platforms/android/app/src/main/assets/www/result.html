@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  
+  <script src="assets/axios.js"></script>
+  <script src="assets/vconsole.js"></script>
+</head>
+
+<body>
+
+
+  <script>
+    new VConsole()
+
+    console.log(window.location.href)
+
+    const webSdkInit = (response) => {
+      let url = 'http://101.132.119.74:8081/api/realid/checkresult'
+
+
+      let data = {
+        bizId: response.subCode || '',
+        transactionId: response.state,
+        isReturnImage: 'N'
+      }
+
+      axios.post(url, data).then(res => {
+        console.log('webSdkInit -> success', res)
+
+      }).catch(e => {
+        console.log('webSdkInit -> error', e)
+      })
+    }
+
+
+
+    const getResponse = () => {
+      let params = new URL(location.href).searchParams
+
+      let response = decodeURIComponent(params.get('response'))
+
+      response = JSON.parse(response)
+
+      console.log('response', response, typeof response)
+
+      
+
+      webSdkInit(response)
+    }
+
+    getResponse()
+  </script>
+
+</body>
+
+</html>

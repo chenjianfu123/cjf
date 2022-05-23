@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="css/index.css">
+
+        <title>Hello World</title>
+    </head>
+<!--    <body>-->
+<!--        <div class="app">-->
+<!--            <h1>Apache Cordova</h1>-->
+<!--            <div id="deviceready" class="blink">-->
+<!--                <p class="event listening">Connecting to Device</p>-->
+<!--                <p class="event received">Device is Ready</p>-->
+<!--                <button id="test_plugin">测试插件</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <script type="text/javascript" src="cordova.js"></script>-->
+<!--        <script type="text/javascript" src="js/index.js"></script>-->
+<!--    </body>-->
+    <body>
+    <div id="deviceready" class="blink">
+        <h2>sit 链接测试111111</h2>
+
+        <button class="request">请求后台接口</button>
+        <button class="websdk">webSdk测试</button>
+        <button id="test_plugin">appSdk测试</button>
+    </div>
+
+
+    <script>
+    new VConsole()
+
+    const request = () => {
+      console.log('request -> start')
+      let url = 'https://220.241.39.45/cibs/chbank/service/v1/test'
+
+      axios.get(url).then(res => {
+        console.log('request -> success', res)
+        alert(res.data.message)
+      }).catch(e => {
+        console.log('request -> error', e)
+      })
+    }
+
+    const webSdkInit = () => {
+      console.log('webSdkInit -> start')
+      let url = 'http://101.132.119.74:8081/api/realIdDemoService/initialize'
+
+      const href = window.location.href
+      const baseUrl = href.split('#')[0]
+      const callbackUrl = baseUrl.replace('index.html', 'result.html')
+
+      let data = {
+        flowType: 'H5_REALIDLITE_KYC',
+        docType: '00860000001',
+        serviceLevel: 'REALID0001',
+        operationMode: 'STANDARD',
+        metaInfo: 'MOB_H5',
+        h5ModeConfig: {
+          completeCallbackUrl: callbackUrl,
+          interruptCallbackUrl: callbackUrl
+        }
+      }
+
+      axios.post(url, data).then(res => {
+        console.log('webSdkInit -> success', res)
+
+        const idrecognizeUrl = 'https://sg-production-cdn.zoloz.com/page/zoloz-realid-fe/index.html'
+        const clientCfg = res.data.clientCfg
+        const state = res.data.transactionId
+
+        window.location.href =
+          `${idrecognizeUrl}?state=${state}&clientcfg=${encodeURIComponent(clientCfg)}&callbackurl=${encodeURIComponent(callbackUrl)}`
+      }).catch(e => {
+        console.log('webSdkInit -> error', e)
+      })
+    }
+
+    const appsdkRequest = metaInfo => {
+      console.log('appsdkRequest -> start')
+      let url = 'http://101.132.119.74:8081/api/realIdDemoService/initialize'
+
+      const href = window.location.href
+      const baseUrl = href.split('#')[0]
+      const callbackUrl = baseUrl.replace('index.html', 'result.html')
+
+      let data = {
+        flowType: 'REALIDLITE_KYC',
+        docType: '00860000001',
+        serviceLevel: 'REALID0001',
+        operationMode: 'STANDARD',
+        metaInfo,
+      }
+
+      axios.post(url, data).then(res => {
+        console.log('appsdkRequest -> success', res)
+
+        let successCallback = ress => {
+          console.log('zolozEkyc -> successCallback', ress)
+          let response = {
+            subCode: '', // bizID
+            state: res.data.transactionId  // transactionId
+          }
+          window.location.href =
+          `${callbackUrl}?response=${encodeURIComponent(clientCfg)}`
+        }
+
+        let failureCallback = error => {
+          console.log('zolozEkyc -> failureCallback', error)
+        }
+
+        const clientCfg = res.data.clientCfg
+        const state = res.data.transactionId
+
+        let params = {
+          lang: 'zh-CN',
+          transactionId: state,
+          clientCfg,
+          rsaPubKey: res.data.rsaPubKey
+        }
+
+        cordova.plugins.ZolozEkycPlugin.zolozEkyc(params, successCallback, failureCallback);
+
+        // const idrecognizeUrl = 'https://sg-production-cdn.zoloz.com/page/zoloz-realid-fe/index.html'
+
+
+        // window.location.href =
+        //   `${idrecognizeUrl}?state=${state}&clientcfg=${encodeURIComponent(clientCfg)}&callbackurl=${encodeURIComponent(callbackUrl)}`
+      }).catch(e => {
+        console.log('appsdkRequest -> error', e)
+      })
+
+    }
+
+    const appsdkInit = () => {
+      console.log('appsdkInit -> start')
+      console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
+      let successCallback = res => {
+        console.log('getMetaInfo -> successCallback', res)
+
+        if (res) {
+          let metaInfo = res
+          appsdkRequest(metaInfo)
+        }
+      }
+
+      let failureCallback = error => {
+        console.log('getMetaInfo -> failureCallback', error)
+      }
+
+      console.log('cordova.plugins.ZolozEkycPlugin',cordova.plugins.ZolozEkycPlugin)
+      cordova.plugins.ZolozEkycPlugin.getMetaInfo('111', successCallback, failureCallback);
+    }
+
+    const init = () => {
+      let requestBtn = document.getElementsByClassName('request')[0]
+      let websdkBtn = document.getElementsByClassName('websdk')[0]
+      let appsdkBtn = document.getElementsById('appsdk')
+
+      requestBtn.addEventListener('click', () => {
+        request()
+      })
+      websdkBtn.addEventListener('click', () => {
+        webSdkInit()
+      })
+      appsdkBtn.addEventListener('click', () => {
+        appsdkInit()
+      })
+    }
+
+    // 引入js文件
+    const dynamicLoadJs = (url, callback) => {
+      let head = document.getElementsByTagName('head')[0];
+      let script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = url;
+      if (typeof (callback) == 'function') {
+        script.onload = script.onreadystatechange = function () {
+          if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+            callback();
+            script.onload = script.onreadystatechange = null;
+          }
+        };
+      }
+      head.appendChild(script);
+    }
+
+    // 判断运行环境
+    const getRuntime = () => {
+      // debugger
+      let params = new URL(location.href).searchParams
+
+      let runtime = decodeURIComponent(params.get('runtime'))
+      if (runtime === 'app') {
+        //引入的js文件地址
+        let url = 'cordova.js'
+        dynamicLoadJs(url)
+
+        console.log('runtime', runtime)
+
+        document.addEventListener('deviceready', init, false);
+      } else {
+        init()
+      }
+
+
+    }
+
+    getRuntime()
+
+    // init()
+  </script>
+            <script type="text/javascript" src="cordova.js"></script>
+            <script type="text/javascript" src="js/index.js"></script>
+
+    </body>
+</html>

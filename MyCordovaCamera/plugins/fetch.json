@@ -1,0 +1,34 @@
+{
+  "cordova-plugin-whitelist": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-whitelist@^1.3.4"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "com.cs.camera": {
+    "source": {
+      "type": "local",
+      "path": "D:\\company\\project\\Cordova\\MyCordovaCamera\\node_modules\\cscamera"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "org.apache.cordova.zoloz": {
+    "source": {
+      "type": "local",
+      "path": "D:\\company\\project\\Cordova\\MyCordovaCamera\\node_modules\\zolozekycplugin"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "org.apache.cordova.customgeolocation": {
+    "source": {
+      "type": "local",
+      "path": "D:\\company\\project\\Cordova\\MyCordovaCamera\\node_modules\\cdvlocation"
+    },
+    "is_top_level": true,
+    "variables": {}
+  }
+}

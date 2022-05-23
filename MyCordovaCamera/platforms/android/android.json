@@ -1,0 +1,120 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {
+      "res/xml/config.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<feature name=\"CSCamera\"><param name=\"android-package\" value=\"com.cs.camera.CSCamera\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"ZolozEkycPlugin\"><param name=\"android-package\" value=\"org.apache.cordova.zoloz.ZolozEkycPlugin\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"CDVLocation\"><param name=\"android-package\" value=\"org.apache.cordova.customgeolocation.CDVLocation\" /></feature>",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "AndroidManifest.xml": {
+        "parents": {
+          "/manifest": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+              "count": 7
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+              "count": 6
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
+              "count": 6
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+              "count": 3
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
+              "count": 3
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
+              "count": 3
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
+              "count": 4
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
+              "count": 4
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
+              "count": 3
+            }
+          ],
+          "application": [
+            {
+              "xml": "<provider android:authorities=\"${applicationId}.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"org.apache.cordova.camera.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/camera_provider_paths\" /></provider>",
+              "count": 3
+            }
+          ],
+          "/*": []
+        }
+      }
+    }
+  },
+  "installed_plugins": {
+    "com.cs.camera": {
+      "PACKAGE_NAME": "com.cs.camera"
+    },
+    "org.apache.cordova.zoloz": {
+      "PACKAGE_NAME": "com.cs.camera"
+    },
+    "org.apache.cordova.customgeolocation": {
+      "PACKAGE_NAME": "com.cs.camera"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "id": "com.cs.camera.CSCamera",
+      "file": "plugins/com.cs.camera/www/CSCamera.js",
+      "pluginId": "com.cs.camera",
+      "clobbers": [
+        "cordova.plugins.CSCamera"
+      ]
+    },
+    {
+      "id": "org.apache.cordova.zoloz.ZolozEkycPlugin",
+      "file": "plugins/org.apache.cordova.zoloz/www/ZolozEkycPlugin.js",
+      "pluginId": "org.apache.cordova.zoloz",
+      "clobbers": [
+        "cordova.plugins.ZolozEkycPlugin"
+      ]
+    },
+    {
+      "id": "org.apache.cordova.customgeolocation.CDVLocation",
+      "file": "plugins/org.apache.cordova.customgeolocation/www/CDVLocation.js",
+      "pluginId": "org.apache.cordova.customgeolocation",
+      "clobbers": [
+        "cordova.plugins.customgeolocation"
+      ]
+    }
+  ],
+  "plugin_metadata": {
+    "com.cs.camera": "1.0.0",
+    "org.apache.cordova.zoloz": "1.0.0",
+    "org.apache.cordova.customgeolocation": "1.0.0"
+  }
+}

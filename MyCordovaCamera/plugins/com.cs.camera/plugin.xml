@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--id代表这个插件的唯一标识，在上传到npm后，用户都是通过这个插件id去下载的-->
+<plugin id="com.cs.camera" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+   <!--插件名称-->
+   <name>CSCamera</name>
+   <!--配置JS的路径-->
+   <!--文件中可能会有多个js-module的，一个js-module就是一个调用的方式，这里用户调用的方式就是cordova.plugins.CSCamera.方法名，如对外提供toast这个方法，那调用方式就为cordova.plugins.CSCamera.toast-->
+   <!--js-module标签中的name要和www文件夹下CSCamera.js这个文件名一样-->
+   <js-module name="CSCamera" src="www/CSCamera.js">
+       <!--这里是调用插件时用的名字，这个target就是js代码调用原生代码的引用-->
+       <clobbers target="cordova.plugins.CSCamera" />
+   </js-module>
+   <!--添加Android平台-->
+   <platform name="android">
+       <config-file target="AndroidManifest.xml" parent="/manifest">
+           <!--配置权限-->
+           <uses-permission android:name="android.permission.INTERNET"/>
+           <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+           <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+       </config-file>
+       <config-file target="AndroidManifest.xml" parent="application">
+         <provider
+             android:name="org.apache.cordova.camera.FileProvider"
+             android:authorities="${applicationId}.provider"
+             android:exported="false"
+             android:grantUriPermissions="true" >
+             <meta-data
+                 android:name="android.support.FILE_PROVIDER_PATHS"
+                 android:resource="@xml/camera_provider_paths"/>
+         </provider>
+       </config-file>
+       <!--插件中src/android中的所有java文件都需要在这里声明，否则无法调用-->
+       <!--src为java源文件的路径，target-dir为插件安装好后，源文件的位置，要和下面的feature标签下param标签里的value中的包名对应-->
+       <source-file src="src/android/CSCamera.java" target-dir="src/com/cs/camera" />
+        <!--插件的配置信息， build的时候会添加到res/xml/config.xml文件中-->
+       <config-file parent="/*" target="res/xml/config.xml">
+           <!--name要与java类名一致都为CSCamera, param标签中的value是插件安装好后java类名全路径-->
+           <feature name="CSCamera">
+               <!--插件入口-->
+               <param name="android-package" value="com.cs.camera.CSCamera" />
+           </feature>
+       </config-file>
+   </platform>
+</plugin>
